@@ -468,3 +468,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## Acknowledgments
 
 《深入浅出Spring Boot 2.x》 （杨开振）
+
+[Shiro + JWT + Spring Boot Restful 简易教程](https://github.com/Smith-Cruise/Spring-Boot-Shiro)
+
+[使用Swagger2Markup实现API文档的静态部署](http://blog.didispace.com/swagger2markup-asciidoc/)

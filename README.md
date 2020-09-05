@@ -233,7 +233,7 @@ PUT /users/{id}
     "data": null
 }
 ```
-###Security
+### Security
 只能更新自己
 
 <a name="jointeamusingput"></a>
@@ -341,7 +341,7 @@ POST /rooms
 }
 ```
 
-###Security
+### Security
 只能创建以自己为房主的房间
 <a name="getroomlistusingget"></a>
 ### 获取队伍列表
@@ -483,7 +483,7 @@ DELETE /rooms/{id}
     "data": 1
 }
 ```
-###Security
+### Security    
 只能删除以自己为房主的房间
 
 

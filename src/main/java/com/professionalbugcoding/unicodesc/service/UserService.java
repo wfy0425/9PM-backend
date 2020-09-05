@@ -19,7 +19,7 @@ public class UserService {
     @Autowired
     private final RoomMapper roomMapper = null;
 
-    public UserBean getUserByEmail(String email) {
+    public UserBean getUserInfoByUserEmail(String email) {
         return userMapper.selectOne(new QueryWrapper<UserBean>().eq("email", email));
 
     }

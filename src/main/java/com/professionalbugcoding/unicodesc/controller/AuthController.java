@@ -3,7 +3,6 @@ package com.professionalbugcoding.unicodesc.controller;
 import com.professionalbugcoding.unicodesc.bean.ResponseBean;
 import com.professionalbugcoding.unicodesc.bean.UserBean;
 import com.professionalbugcoding.unicodesc.exception.CommonJsonException;
-import com.professionalbugcoding.unicodesc.exception.UnauthorizedException;
 import com.professionalbugcoding.unicodesc.service.UserService;
 import com.professionalbugcoding.unicodesc.util.JWTUtil;
 import io.swagger.annotations.Api;
@@ -37,13 +36,16 @@ public class AuthController {
     public ResponseBean login(@Valid @RequestParam("email") String email,
                               @Valid @RequestParam("password") String password) {
 
-        UserBean userBean = userService.getUserByEmail(email);
+        UserBean userBean = userService.getUserInfoByUserEmail(email);
 //        if(userBean.getUsername() == null||userBean.getPassword() == null)
 //            throw new CommonJsonException(400l,"username or passowrd wrong");
+//        System.out.println(userBean.getPassword().equals(password));
+//        System.out.println(userBean.getPassword());
+        System.out.println(password);
         if (userBean.getPassword().equals(password)) {
             return new ResponseBean(200, "Login success", JWTUtil.sign(email, password));
         } else {
-            throw new UnauthorizedException();
+            throw new CommonJsonException(400, "username or password wrong");
         }
     }
 
@@ -61,7 +63,7 @@ public class AuthController {
 //        catch (NullPointerException e){
 //            new CommonJsonException(400l,"username or passowrd wrong");
 //        }
-        if (userService.getUserByEmail(email) == null) {
+        if (userService.getUserInfoByUserEmail(email) == null) {
             int ans = userService.addUser(email, password, name, null, null, sex);
 //        if (userBean.getPassword().equals(password)) {
 //            return new ResponseBean(200, "Login success", JWTUtil.sign(username, password));
@@ -70,10 +72,11 @@ public class AuthController {
 //        }
             return new ResponseBean(201, "user registered", JWTUtil.sign(email, password));
         } else
-            throw new CommonJsonException(400l, "username already exist");
+            throw new CommonJsonException(400, "username already exist");
 
 
     }
+
 
     @GetMapping("/require_auth")
     @RequiresAuthentication

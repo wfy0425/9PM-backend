@@ -47,7 +47,7 @@ public class MyRealm extends AuthorizingRealm {
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
         String username = JWTUtil.getUsername(principals.toString());
-        UserBean user = userService.getUserByEmail(username);
+        UserBean user = userService.getUserInfoByUserEmail(username);
         SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo();
         simpleAuthorizationInfo.addRole(user.getRoles());
         Set<String> permission = new HashSet<>(Arrays.asList(user.getRoles().split(",")));
@@ -67,7 +67,7 @@ public class MyRealm extends AuthorizingRealm {
             throw new AuthenticationException("token invalid");
         }
 
-        UserBean userBean = userService.getUserByEmail(username);
+        UserBean userBean = userService.getUserInfoByUserEmail(username);
         if (userBean == null) {
             throw new AuthenticationException("User didn't existed!");
         }

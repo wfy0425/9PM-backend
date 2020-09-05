@@ -1,0 +1,20 @@
+
+[[_definitions]]
+== Definitions
+
+[[_responsebean]]
+=== ResponseBean
+
+[options="header", cols=".^3a,.^4a"]
+|===
+|Name|Schema
+|**code** +
+__optional__|integer (int32)
+|**data** +
+__optional__|object
+|**msg** +
+__optional__|string
+|===
+
+
+

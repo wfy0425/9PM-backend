@@ -233,6 +233,8 @@ PUT /users/{id}
     "data": null
 }
 ```
+###Security
+只能更新自己
 
 <a name="jointeamusingput"></a>
 ### 将用户加入队伍
@@ -299,13 +301,7 @@ DELETE /users/{teamId}/{userId}
     "data": 1
 }
 ```
-```json
-{
-    "code": 401,
-    "msg": "Unauthorized",
-    "data": null
-}
-```
+
 
 ### 创建队伍
 ```
@@ -344,30 +340,45 @@ POST /rooms
     }
 }
 ```
-```json
-{
-    "code": 401,
-    "msg": "Unauthorized",
-    "data": null
-}
-```
+
+###Security
+只能创建以自己为房主的房间
 <a name="getroomlistusingget"></a>
 ### 获取队伍列表
 ```
 GET /rooms
 ```
 
+#### Parameters
+
+|Type|Name|Description|Schema|
+|---|---|---|---|
+|**Header**|**Authorization**  <br>*required*|token|string|
 
 #### Responses
 
 |HTTP Code|Description|Schema|
 |---|---|---|
-|**200**|OK|[ResponseBean](#responsebean)|
-|**401**|Unauthorized|No Content|
-|**403**|Forbidden|No Content|
-|**404**|Not Found|No Content|
+|**200**|OK|ResponseBean|
+|**401**|Unauthorized|ResponseBean|
 
-
+```json
+{
+    "code": 200,
+    "msg": "OK",
+    "data": [
+        {
+            "id": 1,
+            "dateTime": "2020-9-5-20-00",
+            "gameName": "lol",
+            "maxNumber": 5,
+            "hostId": 1,
+            "membersId": "17,17"
+        },
+        ...
+    ]
+}
+```
 <a name="getroominfobyhostidusingget"></a>
 ### 通过房主id获取队伍信息
 ```
@@ -380,20 +391,35 @@ GET /rooms/host/{id}
 |Type|Name|Description|Schema|
 |---|---|---|---|
 |**Path**|**id**  <br>*required*|房主Id|integer (int32)|
-
+|**Header**|**Authorization**  <br>*required*|token|string|
 
 #### Responses
 
 |HTTP Code|Description|Schema|
 |---|---|---|
-|**200**|OK|[ResponseBean](#responsebean)|
-|**401**|Unauthorized|No Content|
-|**403**|Forbidden|No Content|
-|**404**|Not Found|No Content|
+|**200**|OK|ResponseBean|
+|**401**|Unauthorized|ResponseBean|
 
+```json
+{
+    "code": 200,
+    "msg": "OK",
+    "data": [
+        {
+            "id": 1,
+            "dateTime": "2020-9-5-20-00",
+            "gameName": "lol",
+            "maxNumber": 5,
+            "hostId": 1,
+            "membersId": "17,17"
+        }
+    ]
+}
+```
 
 <a name="getroominfobyroomidusingget"></a>
 ### 通过队伍id获取队伍信息
+
 ```
 GET /rooms/{id}
 ```
@@ -404,16 +430,29 @@ GET /rooms/{id}
 |Type|Name|Description|Schema|
 |---|---|---|---|
 |**Path**|**id**  <br>*required*|队伍Id|integer (int32)|
-
+|**Header**|**Authorization**  <br>*required*|token|string|
 
 #### Responses
 
 |HTTP Code|Description|Schema|
 |---|---|---|
-|**200**|OK|[ResponseBean](#responsebean)|
-|**401**|Unauthorized|No Content|
-|**403**|Forbidden|No Content|
-|**404**|Not Found|No Content|
+|**200**|OK|ResponseBean|
+|**401**|Unauthorized|ResponseBean|
+
+```json
+{
+    "code": 200,
+    "msg": "OK",
+    "data": {
+        "id": 1,
+        "dateTime": "2020-9-5-20-00",
+        "gameName": "lol",
+        "maxNumber": 5,
+        "hostId": 1,
+        "membersId": "17"
+    }
+}
+```
 
 
 <a name="deleteroombyroomidusingdelete"></a>
@@ -428,16 +467,24 @@ DELETE /rooms/{id}
 |Type|Name|Description|Schema|
 |---|---|---|---|
 |**Path**|**id**  <br>*required*|队伍Id|integer (int32)|
-
+|**401**|Unauthorized|ResponseBean|
 
 #### Responses
 
 |HTTP Code|Description|Schema|
 |---|---|---|
-|**200**|OK|[ResponseBean](#responsebean)|
-|**204**|No Content|No Content|
-|**401**|Unauthorized|No Content|
-|**403**|Forbidden|No Content|
+|**200**|OK|ResponseBean|
+|**401**|Unauthorized|ResponseBean|
+
+```json
+{
+    "code": 200,
+    "msg": "OK",
+    "data": 1
+}
+```
+###Security
+只能删除以自己为房主的房间
 
 
 <a name="getuserlistusingget"></a>

@@ -87,7 +87,11 @@ public class UserService {
         roomBean.setHostId(hostId);
         roomMapper.insert(roomBean);
         UserBean userBean = this.getUserInfoByUserId(hostId);
-        userBean.setJoinedTeams(userBean.getJoinedTeams() + "," + roomBean.getId());
+        String s = userBean.getMyTeams();
+        if (s==null||s.isEmpty())
+            userBean.setMyTeams(String.valueOf(roomBean.getId()));
+        else
+            userBean.setMyTeams(userBean.getMyTeams() + "," + roomBean.getId());
         updateUserByUserId(hostId, userBean);
         return roomBean;
     }
@@ -101,19 +105,21 @@ public class UserService {
 
     public int deleteRoomByRoomId(int roomId) {
         RoomBean room = this.getRoomInfoByRoomId(roomId);
-        String[] members = room.getMembersId().split(",");
-        for (String memberStr : members) {
-            int memberId = Integer.parseInt(memberStr);
-            UserBean userBean = this.getUserInfoByUserId(memberId);
-            String[] joinedTeams = userBean.getJoinedTeams().split(",");
-            StringBuilder sb = new StringBuilder();
-            for (String s : joinedTeams) {
-                if (roomId != Integer.parseInt(s))
-                    sb.append(s).append(",");
+        if (room.getMembersId()!=null&&!room.getMembersId().isEmpty()) {
+            String[] members = room.getMembersId().split(",");
+            for (String memberStr : members) {
+                int memberId = Integer.parseInt(memberStr);
+                UserBean userBean = this.getUserInfoByUserId(memberId);
+                String[] joinedTeams = userBean.getJoinedTeams().split(",");
+                StringBuilder sb = new StringBuilder();
+                for (String s : joinedTeams) {
+                    if (roomId != Integer.parseInt(s))
+                        sb.append(s).append(",");
+                }
+                UserBean updateInfo = new UserBean();
+                updateInfo.setJoinedTeams(sb.toString());
+                this.updateUserByUserId(userBean.getId(), updateInfo);
             }
-            UserBean updateInfo = new UserBean();
-            updateInfo.setJoinedTeams(sb.toString());
-            this.updateUserByUserId(userBean.getId(), updateInfo);
         }
 
         UserBean hostUserBean = this.getUserInfoByUserId(room.getHostId());

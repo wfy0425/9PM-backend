@@ -29,8 +29,38 @@ https://www.runoob.com/mysql/mysql-install.html
 
 Establish develop environment data
 
-```
-Some SQL 
+``` sql
+create table room
+(
+    id         int auto_increment
+        primary key,
+    date_time  varchar(255) null,
+    game_name  varchar(255) null,
+    max_number int          null,
+    host_id    int          not null,
+    members_id varchar(255) null
+);
+
+INSERT INTO unicodesc.room (id, date_time, game_name, max_number, host_id, members_id) VALUES (1, '2020-9-5-20-00', 'lol', 5, 1, '2,3');
+INSERT INTO unicodesc.room (id, date_time, game_name, max_number, host_id, members_id) VALUES (2, '2020-1-1-0-0', 'pubg', 4, 2, null);
+INSERT INTO unicodesc.room (id, date_time, game_name, max_number, host_id, members_id) VALUES (3, '2020-02-1420-10', 'lol', 5, 1, null);
+
+create table user
+(
+    id           bigint auto_increment
+        primary key,
+    email        varchar(64)                      null,
+    password     varchar(255) collate utf8mb4_bin null,
+    name         varchar(32)                      null,
+    my_teams     varchar(255) collate utf8mb4_bin null,
+    joined_teams varchar(255)                     null,
+    sex          int                              null,
+    roles        varchar(255)                     null
+);
+
+INSERT INTO unicodesc.user (id, email, password, name, my_teams, joined_teams, sex, roles) VALUES (1, 'abc@ucsd.edu', 'sss', 'Yui', '1,3', null, 0, null);
+INSERT INTO unicodesc.user (id, email, password, name, my_teams, joined_teams, sex, roles) VALUES (2, 'yyu@ucsd.edu', 'sss', 'Yukino', '2', '1', 2, null);
+INSERT INTO unicodesc.user (id, email, password, name, my_teams, joined_teams, sex, roles) VALUES (3, 'zzd@ucsd.edu', '123', 'zzd', null, '1', 0, null);
 ```
 
 ### Installation

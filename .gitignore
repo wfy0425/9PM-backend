@@ -34,3 +34,4 @@ build/
 *.log
 unicodesc_user.sql
 unicodesc_room.sql
+*.log

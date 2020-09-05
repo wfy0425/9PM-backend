@@ -1,8 +1,9 @@
 package com.professionalbugcoding.unicodesc.controller;
 
-import org.apache.shiro.ShiroException;
 import com.professionalbugcoding.unicodesc.bean.ResponseBean;
+import com.professionalbugcoding.unicodesc.exception.CommonJsonException;
 import com.professionalbugcoding.unicodesc.exception.UnauthorizedException;
+import org.apache.shiro.ShiroException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -25,6 +26,13 @@ public class ExceptionController {
     @ExceptionHandler(UnauthorizedException.class)
     public ResponseBean handle401() {
         return new ResponseBean(401, "Unauthorized", null);
+    }
+
+    // 捕捉UnauthorizedException
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(CommonJsonException.class)
+    public ResponseBean handle400(CommonJsonException ex) {
+        return new ResponseBean(ex.getCode().intValue(), ex.getCustomMsg(), null);
     }
 
     // 捕捉其他所有异常

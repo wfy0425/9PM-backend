@@ -3,6 +3,7 @@ package com.professionalbugcoding.unicodesc;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
+import com.spring4all.swagger.EnableSwagger2Doc;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -11,10 +12,11 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
+@EnableSwagger2Doc
 @SpringBootApplication
 @MapperScan("com.professionalbugcoding.unicodesc.mapper")
 public class UnicodescApplication extends WebMvcConfigurerAdapter {
@@ -41,7 +43,7 @@ public class UnicodescApplication extends WebMvcConfigurerAdapter {
         fastConverter.setFastJsonConfig(fastJsonConfig);
 
         //处理字符串, 避免直接返回字符串的时候被添加了引号
-        StringHttpMessageConverter smc = new StringHttpMessageConverter(Charset.forName("UTF-8"));
+        StringHttpMessageConverter smc = new StringHttpMessageConverter(StandardCharsets.UTF_8);
         converters.add(smc);
 
         converters.add(fastConverter);

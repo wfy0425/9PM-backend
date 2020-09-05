@@ -72,9 +72,10 @@ public class UserService {
 
     }
 
-    public int updateUserByUserId(int id, UserBean userBean) {
+    public UserBean updateUserByUserId(int id, UserBean userBean) {
         userBean.setId(id);
-        return userMapper.updateById(userBean);
+        userMapper.updateById(userBean);
+        return userBean;
 
     }
 
@@ -91,9 +92,10 @@ public class UserService {
         return roomBean;
     }
 
-    public int updateRoomByRoomId(int id, RoomBean roomBean) {
+    public RoomBean updateRoomByRoomId(int id, RoomBean roomBean) {
         roomBean.setId(id);
-        return roomMapper.updateById(roomBean);
+        roomMapper.updateById(roomBean);
+        return roomBean;
 
     }
 
@@ -134,24 +136,34 @@ public class UserService {
 
     public int joinTeam(int roomId, int userId) {
         RoomBean roomBean = this.getRoomInfoByRoomId(roomId);
-        roomBean.setMembersId(roomBean.getMembersId() + userId);
+        String s = roomBean.getMembersId();
+        if (s==null||s.isEmpty())
+            roomBean.setMembersId(String.valueOf(userId));
+        else
+            roomBean.setMembersId(s + ","+userId);
         UserBean userBean = this.getUserInfoByUserId(userId);
-        userBean.setJoinedTeams(userBean.getJoinedTeams() + roomId);
+        String ss = userBean.getJoinedTeams();
+        if (ss==null||ss.isEmpty())
+            userBean.setJoinedTeams(String.valueOf(roomId));
+        else
+            userBean.setJoinedTeams(ss+ ","+roomId);
         this.updateRoomByRoomId(roomId, roomBean);
-        return this.updateUserByUserId(userId, userBean);
+        this.updateUserByUserId(userId, userBean);
+        return 1;
     }
 
     public int removeUserFromJoinedTeam(int roomId, int userId) {
         RoomBean room = this.getRoomInfoByRoomId(roomId);
         String[] members = room.getMembersId().split(",");
+        StringBuilder sb = new StringBuilder();
         for (String memberStr : members) {
-            StringBuilder sb = new StringBuilder();
             if (userId != Integer.parseInt(memberStr))
                 sb.append(memberStr).append(",");
-            RoomBean updateRoomInfo = new RoomBean();
-            updateRoomInfo.setMembersId(sb.toString());
-            this.updateRoomByRoomId(roomId, updateRoomInfo);
+
         }
+        RoomBean updateRoomInfo = new RoomBean();
+        updateRoomInfo.setMembersId(sb.toString());
+        this.updateRoomByRoomId(roomId, updateRoomInfo);
 
         UserBean userBean = this.getUserInfoByUserId(userId);
         String[] joinedTeam = userBean.getJoinedTeams().split(",");
@@ -162,6 +174,7 @@ public class UserService {
         }
         UserBean updateUserBean = new UserBean();
         updateUserBean.setJoinedTeams(sb1.toString());
-        return this.updateUserByUserId(userId, updateUserBean);
+        this.updateUserByUserId(userId, updateUserBean);
+        return 1;
     }
 }

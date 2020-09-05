@@ -66,24 +66,23 @@ GET /login
 
 |HTTP Code|Description|Schema|
 |---|---|---|
-|**200**|OK|[ResponseBean](#responsebean)|
-|**401**|Unauthorized|No Content|
-|**403**|Forbidden|No Content|
-|**404**|Not Found|No Content|
+|**200**|OK|ResponseBean|
+|**400**|Unauthorized|ResponseBean|
 
-
-#### Tags
-
-* 鉴权
-
-
-#### Security
-
-|Type|Name|Scopes|
-|---|---|---|
-|**apiKey**|**[Authorization](#authorization)**|global|
-
-
+```json
+{
+    "code": 200,
+    "msg": "Login success",
+    "data": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1OTkzMDk5NzgsInVzZXJuYW1lIjoiMTIzQGdtYWlsLmNvbSJ9.0i4g4K5IcOY5h2q9xYuYtG_sbkjkc5LwEilz9KM_YvQ"
+}
+```
+```json
+{
+    "code": 400,
+    "msg": "username or password wrong",
+    "data": null
+}
+```
 <a name="registerusingpost"></a>
 ### 注册
 ```
@@ -105,25 +104,22 @@ POST /register
 
 |HTTP Code|Description|Schema|
 |---|---|---|
-|**200**|OK|[ResponseBean](#responsebean)|
-|**201**|Created|No Content|
-|**401**|Unauthorized|No Content|
-|**403**|Forbidden|No Content|
-|**404**|Not Found|No Content|
-
-
-#### Tags
-
-* 鉴权
-
-
-#### Security
-
-|Type|Name|Scopes|
-|---|---|---|
-|**apiKey**|**[Authorization](#authorization)**|global|
-
-
+|**201**|Created|ResponseBean|
+|**400**|Unauthorized|ResponseBean|
+```json
+{
+    "code": 201,
+    "msg": "user registered",
+    "data": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1OTkzMTM0ODUsInVzZXJuYW1lIjoiYWJjQHVjc2QuZWR1In0.RrPSAM0iJi7GFAMMTgLbLZHPwjPdglmF5cHrWSTV3ug"
+}
+```
+```json
+{
+    "code": 400,
+    "msg": "username already exist",
+    "data": null
+}
+```
 <a name="requireauthusingget"></a>
 ### 获取用户列表
 ```
@@ -141,18 +137,6 @@ GET /users
 |**404**|Not Found|No Content|
 
 
-#### Tags
-
-* 用户管理
-
-
-#### Security
-
-|Type|Name|Scopes|
-|---|---|---|
-|**apiKey**|**[Authorization](#authorization)**|global|
-
-
 <a name="getuserinfobyuseridusingget"></a>
 ### 通过用户id获取用户信息
 ```
@@ -165,30 +149,42 @@ GET /users/{id}
 |Type|Name|Description|Schema|
 |---|---|---|---|
 |**Path**|**id**  <br>*required*|用户Id|integer (int32)|
-
+|**Header**|**Authorization**  <br>*required*|token|string|
 
 #### Responses
 
 |HTTP Code|Description|Schema|
 |---|---|---|
-|**200**|OK|[ResponseBean](#responsebean)|
-|**401**|Unauthorized|No Content|
-|**403**|Forbidden|No Content|
-|**404**|Not Found|No Content|
+|**200**|OK||
+|**401**|Unauthorized|ResponseBean|
 
 
-#### Tags
-
-* 用户管理
-
-
-#### Security
-
-|Type|Name|Scopes|
-|---|---|---|
-|**apiKey**|**[Authorization](#authorization)**|global|
-
-
+```json
+{
+    "code": 200,
+    "msg": "OK",
+    "data": [
+        {
+            "id": 1,
+            "email": "123@gmail.com",
+            "password": "123",
+            "name": "Adam",
+            "myTeams": "1",
+            "joinedTeams": "2",
+            "sex": 1,
+            "roles": null
+        },
+        ...
+    ]
+}
+```
+```json
+{
+    "code": 401,
+    "msg": "The current Subject is not authenticated.  Access denied.",
+    "data": null
+}
+```
 <a name="updateuserusingput"></a>
 ### 更新用户详细信息
 ```
@@ -204,35 +200,44 @@ PUT /users/{id}
 |**Query**|**name**  <br>*optional*|姓名|string||
 |**Query**|**password**  <br>*optional*|密码|string||
 |**Query**|**sex**  <br>*optional*|性别|integer (int32)|`0`|
-
+|**Header**|**Authorization**  <br>*required*|token|string|
 
 #### Responses
 
 |HTTP Code|Description|Schema|
 |---|---|---|
-|**200**|OK|[ResponseBean](#responsebean)|
-|**201**|Created|No Content|
-|**401**|Unauthorized|No Content|
-|**403**|Forbidden|No Content|
-|**404**|Not Found|No Content|
+|**200**|OK|ResponseBean|
+|**401**|Unauthorized|ResponseBean|
 
+```json
+{
+    "code": 200,
+    "msg": "OK",
+    "data": {
+        "id": 17,
+        "email": null,
+        "password": null,
+        "name": "Yukinoshita Yukino",
+        "myTeams": null,
+        "joinedTeams": null,
+        "sex": 0,
+        "roles": null
+    }
+}
+```
 
-#### Tags
-
-* 用户管理
-
-
-#### Security
-
-|Type|Name|Scopes|
-|---|---|---|
-|**apiKey**|**[Authorization](#authorization)**|global|
-
+```json
+{
+    "code": 401,
+    "msg": "The current Subject is not authenticated.  Access denied.",
+    "data": null
+}
+```
 
 <a name="jointeamusingput"></a>
 ### 将用户加入队伍
 ```
-PUT /users/{teamId}.{userId}
+PUT /users/{teamId}/{userId}
 ```
 
 
@@ -242,35 +247,34 @@ PUT /users/{teamId}.{userId}
 |---|---|---|---|
 |**Path**|**teamId**  <br>*required*|队伍Id|integer (int32)|
 |**Path**|**userId**  <br>*required*|用户Id|integer (int32)|
-
+|**Header**|**Authorization**  <br>*required*|token|string|
 
 #### Responses
 
 |HTTP Code|Description|Schema|
 |---|---|---|
-|**200**|OK|[ResponseBean](#responsebean)|
-|**201**|Created|No Content|
-|**401**|Unauthorized|No Content|
-|**403**|Forbidden|No Content|
-|**404**|Not Found|No Content|
+|**200**|OK|ResponseBean|
+|**401**|Unauthorized|ResponseBean|
 
-
-#### Tags
-
-* 用户管理
-
-
-#### Security
-
-|Type|Name|Scopes|
-|---|---|---|
-|**apiKey**|**[Authorization](#authorization)**|global|
-
+```json
+{
+    "code": 200,
+    "msg": "OK",
+    "data": 1
+}
+```
+```json
+{
+    "code": 401,
+    "msg": "Unauthorized",
+    "data": null
+}
+```
 
 <a name="removeuserfromjoinedteamusingdelete"></a>
 ### 从队伍中删除用户
 ```
-DELETE /users/{teamId}.{userId}
+DELETE /users/{teamId}/{userId}
 ```
 
 
@@ -280,28 +284,29 @@ DELETE /users/{teamId}.{userId}
 |---|---|---|---|
 |**Path**|**teamId**  <br>*required*|队伍Id|integer (int32)|
 |**Path**|**userId**  <br>*required*|用户Id|integer (int32)|
-
+|**Header**|**Authorization**  <br>*required*|token|string|
 
 #### Responses
 
 |HTTP Code|Description|Schema|
 |---|---|---|
-|**200**|OK|[ResponseBean](#responsebean)|
-|**204**|No Content|No Content|
-|**401**|Unauthorized|No Content|
-|**403**|Forbidden|No Content|
+|**200**|OK|ResponseBean|
+|**401**|Unauthorized|ResponseBean|
+```json
+{
+    "code": 200,
+    "msg": "OK",
+    "data": 1
+}
+```
+```json
+{
+    "code": 401,
+    "msg": "Unauthorized",
+    "data": null
+}
+```
 
-
-#### Tags
-
-* 用户管理
-
-
-#### Security
-
-|Type|Name|Scopes|
-|---|---|---|
-|**apiKey**|**[Authorization](#authorization)**|global|
 ### 创建队伍
 ```
 POST /rooms
@@ -317,26 +322,35 @@ POST /rooms
 |**Query**|**maxNumber**  <br>*required*|队伍最大人数|integer (int32)|
 |**Query**|**date**  <br>*required*|游戏日期|string|
 |**Query**|**time**  <br>*required*|游戏时间|string|
-
+|**Header**|**Authorization**  <br>*required*|token|string|
 
 #### Responses
 
 |HTTP Code|Description|Schema|
 |---|---|---|
-|**200**|OK|[ResponseBean](#responsebean)|
-|**201**|Created|No Content|
-|**401**|Unauthorized|No Content|
-|**403**|Forbidden|No Content|
-|**404**|Not Found|No Content|
-
-
-#### Security
-
-|Type|Name|Scopes|
-|---|---|---|
-|**apiKey**|**[Authorization](#authorization)**|global|
-
-
+|**200**|OK|ResponseBean|
+|**401**|Unauthorized|ResponseBean|
+```json
+{
+    "code": 201,
+    "msg": "CREATED",
+    "data": {
+        "id": 8,
+        "dateTime": "2222",
+        "gameName": "123",
+        "maxNumber": 4,
+        "hostId": 17,
+        "membersId": null
+    }
+}
+```
+```json
+{
+    "code": 401,
+    "msg": "Unauthorized",
+    "data": null
+}
+```
 <a name="getroomlistusingget"></a>
 ### 获取队伍列表
 ```
@@ -352,13 +366,6 @@ GET /rooms
 |**401**|Unauthorized|No Content|
 |**403**|Forbidden|No Content|
 |**404**|Not Found|No Content|
-
-
-#### Security
-
-|Type|Name|Scopes|
-|---|---|---|
-|**apiKey**|**[Authorization](#authorization)**|global|
 
 
 <a name="getroominfobyhostidusingget"></a>
@@ -385,13 +392,6 @@ GET /rooms/host/{id}
 |**404**|Not Found|No Content|
 
 
-#### Security
-
-|Type|Name|Scopes|
-|---|---|---|
-|**apiKey**|**[Authorization](#authorization)**|global|
-
-
 <a name="getroominfobyroomidusingget"></a>
 ### 通过队伍id获取队伍信息
 ```
@@ -416,13 +416,6 @@ GET /rooms/{id}
 |**404**|Not Found|No Content|
 
 
-#### Security
-
-|Type|Name|Scopes|
-|---|---|---|
-|**apiKey**|**[Authorization](#authorization)**|global|
-
-
 <a name="deleteroombyroomidusingdelete"></a>
 ### 通过队伍id删除队伍
 ```
@@ -445,13 +438,6 @@ DELETE /rooms/{id}
 |**204**|No Content|No Content|
 |**401**|Unauthorized|No Content|
 |**403**|Forbidden|No Content|
-
-
-#### Security
-
-|Type|Name|Scopes|
-|---|---|---|
-|**apiKey**|**[Authorization](#authorization)**|global|
 
 
 <a name="getuserlistusingget"></a>

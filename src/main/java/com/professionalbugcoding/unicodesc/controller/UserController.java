@@ -72,13 +72,13 @@ public class UserController {
         userBean.setName(name);
         userBean.setPassword(password);
         userBean.setSex(sex);
-        int ans = userService.updateUserByUserId(id, userBean);
+        UserBean ans = userService.updateUserByUserId(id, userBean);
         return new ResponseBean(200, "OK", ans);
     }
 
-    @RequiresAuthentication
+//    @RequiresAuthentication
     @ApiOperation(value = "从组队中删除用户")
-    @DeleteMapping("/{teamId}.{userId}")
+    @DeleteMapping("/{teamId}/{userId}")
     public ResponseBean removeUserFromJoinedTeam(@Valid @PathVariable int teamId, @Valid @PathVariable int userId) {
 
 
@@ -88,9 +88,9 @@ public class UserController {
 
     }
 
-    @RequiresAuthentication
+//    @RequiresAuthentication
     @ApiOperation(value = "将用户加入队伍")
-    @PutMapping("/{teamId}.{userId}")
+    @PutMapping("/{teamId}/{userId}")
     public ResponseBean joinTeam(@Valid @PathVariable int teamId, @Valid @PathVariable int userId) {
 
 
